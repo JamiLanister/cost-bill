@@ -1,0 +1,33 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <input id="inp" type="file" name="" id="" value="上传文件" />
+    </div>
+
+    <script>
+        const inp = document.getElementById('inp');
+        inp.addEventListener('change', (e) => {
+            const [file] = e.target.files;
+            // console.log(file)
+            const formData = new FormData();
+            formData.append('file', file);
+            for(let item of formData.values()) {
+                console.log(item)
+            }
+            
+            // console.log(formData.keys())
+            fetch('http://localhost:7001/api/user/setAvatar', {
+                method: 'POST',
+                body: formData
+            })
+        })
+        
+    </script>
+</body>
+</html>

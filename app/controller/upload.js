@@ -13,10 +13,10 @@ class UploadController extends Controller {
         let uploadDir = ''
         try {
             const f = fs.readFileSync(file.filepath);
-            const dir = path.join(this.config.uploadDir, '2022');
-            console.log(dir)
-            await mkdirp(dir)
-            uploadDir = path.join(dir, file.filename)
+            // const dir = path.join(this.config.uploadDir, '2022');
+            // console.log(dir)
+            // await mkdirp(dir)
+            uploadDir = path.join(this.config.uploadDir, file.filename)
             console.log(file, 'egg-upload');
             fs.writeFileSync(uploadDir, f);
         } catch (error) {

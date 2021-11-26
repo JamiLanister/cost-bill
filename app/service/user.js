@@ -8,7 +8,7 @@ class userService extends Service {
         console.log(result, 'result-=--')
         return result;
         } catch (error) {
-            console.log(error);
+            console.log(error, 'dd');
             return null;
         }
         
@@ -37,6 +37,20 @@ class userService extends Service {
             console.log(error, 'mysql-error-userinfo')
         }
     }
+    async modifyPass (params) {
+        const { ctx, app } = this;
+        try {
+          let result = await app.mysql.update('user', {
+              ...params
+          }, {
+              id: params.id
+          });
+          return result;
+        } catch (error) {
+          console.log(error);
+          return null;
+        }
+      }
 }
 
 module.exports = userService;

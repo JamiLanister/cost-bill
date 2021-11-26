@@ -1,4 +1,3 @@
-
 module.exports = (secret) => {
     return async (ctx, next) => {
         const token = ctx.request.header.authorization;

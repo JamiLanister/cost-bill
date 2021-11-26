@@ -1,3 +1,10 @@
+/* eslint-disable */
+"use strict"
+
+// strict mode
+
+
+
 const Controller = require('egg').Controller;
 
 const defaultAvatar = 'http://s.yezgea02.com/1615973940679/WeChat77d6d2ac093e247c361f0b8a7aeb6c2a.png'
@@ -93,6 +100,22 @@ class UserController extends Controller {
           }
       }
   }
+  async getUserInfo() {
+    const { ctx, app } = this;
+    const token = ctx.request.header.authorization;
+    const decode = await app.jwt.verify(token, app.config.jwt.secret);
+    const userInfo = await ctx.service.user.getUserName(decode.username)
+    ctx.body = {
+      code: 200,
+      msg: '请求成功',
+      data: {
+        id: userInfo.id,
+        username: userInfo.username,
+        signature: userInfo.signature || '',
+        avatar: userInfo.avatar || defaultAvatar
+      }
+    }
+  }
   async editUserInfo() {
     const { ctx, app } = this;
     const token = ctx.request.header.authorization;
@@ -109,6 +132,70 @@ class UserController extends Controller {
         signature,
         name: userInfo.name
     }
+  }
+  async modifyPass () {
+    const { ctx, app } = this;
+    const { old_pass = '', new_pass = '', new_pass2 = '' } = ctx.request.body
+
+    try {
+      let user_id
+      const token = ctx.request.header.authorization;
+      const decode = await app.jwt.verify(token, app.config.jwt.secret);
+      if (!decode) return
+      if (decode.username == 'admin') {
+        ctx.body = {
+          code: 400,
+          msg: '管理员账户，不允许修改密码！',
+          data: null
+        }
+        return
+      }
+      user_id = decode.id
+      const userInfo = await ctx.service.user.getUserName(decode.username)
+
+      if (old_pass != userInfo.password) {
+        ctx.body = {
+          code: 400,
+          msg: '原密码错误',
+          data: null
+        }
+        return
+      }
+
+      if (new_pass != new_pass2) {
+        ctx.body = {
+          code: 400,
+          msg: '新密码不一致',
+          data: null
+        }
+        return
+      }
+
+      const result = await ctx.service.user.modifyPass({
+        ...userInfo,
+        password: new_pass,
+      })
+
+      ctx.body = {
+        code: 200,
+        msg: '请求成功',
+        data: null
+      }
+    } catch (error) {
+      ctx.body = {
+        code: 500,
+        msg: '系统错误',
+        data: null
+      }
+    }
+  }
+  async verify() {
+    const { ctx, app } = this;
+    const { token } = ctx.request.body
+    console.log(ctx.state.user)
+    const decode = await app.jwt.verify(token, app.config.jwt.secret);
+    console.log('decode', decode)
+    ctx.body = 'success gays'
   }
 }
 

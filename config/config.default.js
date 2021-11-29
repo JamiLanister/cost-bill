@@ -62,6 +62,13 @@ module.exports = appInfo => {
     app: true,
     agent: false
   }
+  config.cluster = {
+    listen: {
+      path: '',
+      port: 7009,
+      hostname: '0.0.0.0'
+    }
+  }
   config.jwt = {
     secret: 'Wyf'
   }

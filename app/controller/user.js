@@ -31,7 +31,7 @@ class UserController extends Controller {
         return
     }
     const result = await ctx.service.user.register({
-        name,
+        username: name,
         password,
         signature: '吴亦凡，监狱很大你住着吧',
         avatar: defaultAvatar,

@@ -73,8 +73,9 @@ module.exports = appInfo => {
     secret: 'Wyf'
   }
   config.cors = {
-    origin: '*',
+    origin: 'http://182.92.105.28:5021',
     allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
+    credentials: true,
   }
   config.multipart = {
     mode: 'file'

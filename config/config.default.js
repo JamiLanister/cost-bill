@@ -36,13 +36,28 @@ module.exports = appInfo => {
     uploadDir: 'app/public/upload'
     // myAppName: 'egg',
   };
+
+  // client: {
+  //   host: 'localhost',
+  //   port: '3306',
+  //   user: 'root',
+  //   password: 'Lqokok@37888',
+  //   database: 'cost-bill'
+  // },
   config.mysql = {
+    // client: {
+    //   host: 'localhost',
+    //   port: '3306',
+    //   user: 'root',
+    //   password: 'lqokok111',
+    //   database: 'cost'
+    // },
     client: {
       host: 'localhost',
       port: '3306',
       user: 'root',
-      password: 'lqokok111',
-      database: 'cost'
+      password: 'Lqokok@37888',
+      database: 'cost-bill'
     },
     app: true,
     agent: false

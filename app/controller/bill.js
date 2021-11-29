@@ -36,7 +36,6 @@ class BillController extends Controller {
             if (type_id !== 'all') {
                 return item.type_id === type_id && moment(item.date).format('YYYY-MM') === date
             }
-            console.log(item.date)
             const resDate = item.date.includes('-') ? item.date : Number(item.date);
             return moment(resDate).format('YYYY-MM') === date
         })
@@ -56,7 +55,6 @@ class BillController extends Controller {
             return prev
         }, []).sort((a,b) => moment(a.date) - moment(b.date))
         this.list = reduceList;
-        console.log('list', this.list, reduceList)
         // 分页处理
         const filterListMap = reduceList.slice((page - 1)*page_size, page * page_size)
 

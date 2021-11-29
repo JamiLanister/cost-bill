@@ -5,7 +5,6 @@ class billService extends Service {
         try {
             const { ctx, app } = this;
             const result = await app.mysql.insert('bill',  params);
-            console.log(result, 'result-=--')
             return result;
             } catch (error) {
                 console.log(error);
@@ -31,7 +30,6 @@ class billService extends Service {
             const res = await app.mysql.query(sql);
             return res;
         } catch (error) {
-            console.log(error, 'getlist-erro')
         }
         
     }

@@ -22,7 +22,6 @@ class UserController extends Controller {
         return
     }
     const userInfo = await ctx.service.user.getUserName(name);
-    console.log(userInfo, 'info----')
     if (userInfo) {
         ctx.body = {
             code: 500,
@@ -65,7 +64,6 @@ class UserController extends Controller {
         }
         return
       }
-      console.log(userInfo.password, password, 'password---')
       if (userInfo.password !== password) {
           ctx.body = {
               code: 500,
@@ -104,33 +102,50 @@ class UserController extends Controller {
     const { ctx, app } = this;
     const token = ctx.request.header.authorization;
     const decode = await app.jwt.verify(token, app.config.jwt.secret);
-    const userInfo = await ctx.service.user.getUserName(decode.username)
+    console.log(decode, 'decode---')
+    const userInfo = await ctx.service.user.getUserName(decode.name)
+    console.log(userInfo, 'userInfo---')
     ctx.body = {
       code: 200,
       msg: '请求成功',
       data: {
         id: userInfo.id,
-        username: userInfo.username,
+        username: userInfo.name,
         signature: userInfo.signature || '',
         avatar: userInfo.avatar || defaultAvatar
       }
     }
   }
-  async editUserInfo() {
+  async editUserInfo () {
     const { ctx, app } = this;
-    const token = ctx.request.header.authorization;
-    const { signature } = ctx.request.body;
-    const decode = app.jwt.verify(token, app.config.jwt.secret);
-    if (!decode) return;
-    const userInfo = await ctx.service.user.getUserName(decode.name);
-    const result = await ctx.service.user.editUserInfo({
-        ...decode,
-        signature
-    })
-    ctx.body = {
-        id: userInfo.id,
+    const { signature = '', avatar = '' } = ctx.request.body
+
+    try {
+      let user_id
+      const token = ctx.request.header.authorization;
+      const decode = await app.jwt.verify(token, app.config.jwt.secret);
+      if (!decode) return
+      user_id = decode.id
+
+      const userInfo = await ctx.service.user.getUserName(decode.name)
+      const result = await ctx.service.user.editUserInfo({
+        ...userInfo,
         signature,
-        name: userInfo.name
+        avatar
+      });
+
+      ctx.body = {
+        code: 200,
+        msg: '请求成功',
+        data: {
+          id: user_id,
+          signature,
+          username: userInfo.name,
+          avatar
+        }
+      }
+    } catch (error) {
+      
     }
   }
   async modifyPass () {
@@ -192,9 +207,7 @@ class UserController extends Controller {
   async verify() {
     const { ctx, app } = this;
     const { token } = ctx.request.body
-    console.log(ctx.state.user)
     const decode = await app.jwt.verify(token, app.config.jwt.secret);
-    console.log('decode', decode)
     ctx.body = 'success gays'
   }
 }
